@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chaas-kubewol-tcp
+  namespace: chaas-frontend
+spec:
+  ports:
+  - name: chaas-kubewol-tcp
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: chaas-kubewol
+    env: frontend
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaas-kubewol
+  namespace: chaas-frontend
+spec:
+  selector:
+    matchLabels:
+      app: chaas-kubewol
+      env: frontend
+  template:
+    metadata:
+      labels:
+        app: chaas-kubewol
+        env: frontend
+    spec:
+      containers:
+      - name: kubewol
+        image: fchivite/kubewol:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: kubewol
+          containerPort: 5000
+          protocol: TCP
