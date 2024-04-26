@@ -2,4 +2,26 @@
 {% block title %}Dashboard{% endblock %}
 {% block content%}
 
+
+<div class="container">
+    <div class="row my-3">
+        {% for entry in dashboard_content %}
+        <div class="col-md-4 my-4 bg-dark bg-gradient text-white">
+            <h2 class="my-4 text-success">{{ entry.hostname }}</h2>
+            <p class="my-4">MAC Address: <span class="text-white-50">{{ entry.mac }}</span></p>
+            <p class="my-4">Last WOL Sent:
+                <span class="text-white-50">
+                    {% if entry.last_execution %}
+                        {{ entry.last_execution.strftime("%d/%m/%Y %H:%M")}}
+                    {% else %}
+                        Never
+                    {% endif %}
+                </span>
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
 {% endblock %}
