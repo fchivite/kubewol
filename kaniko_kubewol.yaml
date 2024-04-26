@@ -2,14 +2,15 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: kaniko
+  namespace: kubewol
 spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
     args:
     - "--dockerfile=Dockerfile"
-    - "--context=git://github.com/kunchalavikram1427/kaniko-demo.git" #git://github.com/kunchalavikram1427/connected-app.git#refs/heads/master
-    - "--destination=kunchalavikram/kaniko-demo-image:latest"
+    - "--context=git://github.com/fchivite/kubewol.git"
+    - "--destination=fchivite/kubewol:latest"
     volumeMounts:
     - name: kaniko-secret
       mountPath: /kaniko/.docker
@@ -17,7 +18,7 @@ spec:
   volumes:
   - name: kaniko-secret
     secret:
-      secretName: regcred
+      secretName: dockercred
       items:
         - key: .dockerconfigjson
           path: config.json
