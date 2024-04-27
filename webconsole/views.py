@@ -1,22 +1,16 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
+from .models import Wol
+from . import db
+from sqlalchemy.exc import IntegrityError
 from datetime import datetime
-import sqlite3
+import json
 
 views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    try:
-        connection = sqlite3.connect('wol.db')
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
-        query = "SELECT mac,hostname,last_execution from wakeonlan"
-        exec = cursor.execute(query)
-        result = exec.fetchall()
-    except sqlite3.OperationalError as e:
-            print(e)
-            return render_template("error.html")
-    return render_template("dashboard.html", dashboard_content=result)
+    db_entries = db.session.execute(db.select(Wol).order_by(Wol.hostname)).scalars()
+    return render_template("dashboard.html", dashboard_content=db_entries)
 
 
 @views.route('/dashboard')
@@ -32,16 +26,13 @@ def add_wol():
         heartbeat = request.form.get('heartbeat')
         monitor = request.form.get('monitor')
         address = request.form.get('address')
+        #last_execution = datetime.today()
 
+        new_wol = Wol(mac=mac.upper(), hostname=hostname, heartbeat=heartbeat, monitor=monitor, address=address)
         try:
-            connection = sqlite3.connect('wol.db')
-            cursor = connection.cursor()
-            query = f"INSERT INTO wakeonlan (mac,hostname,heartbeat,monitor,address)VALUES('{mac}', '{hostname}',{heartbeat},'{monitor}','{address}')"
-            cursor.execute(query)
-            connection.commit()
-        except sqlite3.IntegrityError as e:
+            db.session.add(new_wol)
+            db.session.commit()
+        except IntegrityError as e:
             print(f"Error occurred: MAC Address {mac} already exists.")
-        except sqlite3.OperationalError as e:
-            print(e)
     
     return render_template("addwol.html")
