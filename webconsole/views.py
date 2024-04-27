@@ -24,9 +24,10 @@ def add_wol():
         mac = request.form.get('mac')
         hostname = request.form.get('hostname')
         heartbeat = request.form.get('heartbeat')
-        monitor = request.form.get('monitor')
+        monitor = str(request.form.get('monitor'))
         address = request.form.get('address')
-        #last_execution = datetime.today()
+        if monitor != 'ping' and (not address.startswith(monitor)):
+            address = f'{monitor}://{address}'
 
         new_wol = Wol(mac=mac.upper(), hostname=hostname, heartbeat=heartbeat, monitor=monitor, address=address)
         try:
