@@ -3,7 +3,6 @@ from .models import Wol
 from . import db
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
-import json
 
 views = Blueprint('views', __name__)
 
