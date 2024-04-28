@@ -11,4 +11,6 @@ class Logger():
         log_file.close()
     
     def wol(self,hostname):
-        self.write(f"WOL;{datetime.today().strftime('%Y/%m/%d %H:%M')};{hostname}\n")
+        log_file = open("instance/wol.log", "a")
+        log_file.write(f"WOL;{datetime.today().strftime('%Y/%m/%d %H:%M')};{hostname}\n")
+        log_file.close()
