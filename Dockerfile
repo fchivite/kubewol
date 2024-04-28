@@ -1,5 +1,5 @@
 FROM python:3.12-alpine
-RUN pip install flask flask_sqlalchemy wakeonlan pythonping flask-apscheduler
+RUN pip install flask flask_sqlalchemy wakeonlan pythonping flask-apscheduler requests
 WORKDIR /kubewol
 COPY kubewol.py .
 COPY webconsole  webconsole/
