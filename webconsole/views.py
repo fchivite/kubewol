@@ -42,8 +42,11 @@ def add_wol():
 
 @views.route('/delete')
 def delte():
-    mac = request.args.get('mac')
-    entry = db.session.execute(db.select(Wol).filter_by(mac=mac)).scalars().first()
-    db.session.delete(entry)
-    db.session.commit()
+    try:
+        mac = request.args.get('mac')
+        entry = db.session.execute(db.select(Wol).filter_by(mac=mac)).scalars().first()
+        db.session.delete(entry)
+        db.session.commit()
+    except:
+        pass
     return dashboard()

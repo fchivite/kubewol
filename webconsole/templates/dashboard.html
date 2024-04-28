@@ -45,5 +45,9 @@
         window.location.href = '/delete?mac='+mac :
         null;
     }
+    function autoRefresh() {
+        window.location = "/dashboard";
+    }
+    setInterval('autoRefresh()', 15000);
     </script>
 {% endblock %}

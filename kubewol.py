@@ -10,9 +10,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from datetime import datetime
 
 app_port = 5000
-
 app = create_app()
 scheduler = BackgroundScheduler()
+logger = Logger()
 
 def get_monitors():
     with app.app_context():
@@ -25,8 +25,8 @@ def get_monitors():
                     db.session.commit()
                 except:
                     send_magic_packet(entry.mac)
-                    Logger.write(f"Sent Magic Packet to {entry.hostname} with MAC Address {entry.mac}")
-                    Logger.wol(entry.hostname)
+                    logger.write(f"Sent Magic Packet to {entry.hostname} with MAC Address {entry.mac}")
+                    logger.wol(entry.hostname)
                     entry.last_execution = datetime.today()
                     entry.healthy = False
                     db.session.commit()
