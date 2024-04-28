@@ -3,7 +3,7 @@
     <form method="POST" class="text-white w-50 position-absolute start-50 translate-middle-x">
       <div class="row">
         <div class="col">
-          <h3 class="text-center">Add New Wake-On-LAN Monitor</h3>
+          <h3 class="text-center {{'text-danger' if error}}">Add New Wake-On-LAN Monitor</h3>
         </div>
       </div>
       <div class="row">
@@ -24,7 +24,7 @@
       </div>
       <div class="row">
         <div class="col">
-          <label for="heartbeat">Monitor</label><br>
+          <label for="monitor">Monitor</label><br>
         </div>
       </div>
       <div class="row">
@@ -41,7 +41,10 @@
       </div>
       <div class="row my-4">
         <div class="col">
-          <button type="submit" class="btn btn-primary">Register</button>
+          <button type="submit" id="register" class="btn btn-primary">Register</button>
+        </div>
+        <div class="col-md-8 text-danger">
+          <label for="register">{{error}}</label><br>
         </div>
       </div>
     </form>

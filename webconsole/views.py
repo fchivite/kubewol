@@ -3,6 +3,7 @@ from .models import Wol
 from . import db
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
+import re
 
 views = Blueprint('views', __name__)
 
@@ -21,20 +22,26 @@ def dashboard():
 @views.route('/add-wol', methods=['GET', 'POST'])
 def add_wol():
     if request.method == 'POST':
+        mac_regex = "^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$"
         mac = request.form.get('mac').upper()
         hostname = request.form.get('hostname')
         monitor = str(request.form.get('monitor'))
         address = request.form.get('address')
-        if monitor != 'ping' and (not address.startswith(monitor)):
-            address = f'{monitor}://{address}'
+        if re.search(mac_regex,mac):
+            if monitor != 'ping' and (not address.startswith(monitor)):
+                address = f'{monitor}://{address}'
 
-        new_wol = Wol(mac=mac.upper(), hostname=hostname, monitor=monitor, address=address)
-        try:
-            db.session.add(new_wol)
-            db.session.commit()
-        except IntegrityError as e:
-            print(f"Error occurred: MAC Address {mac} already exists.")
-        return dashboard()
+            new_wol = Wol(mac=mac.upper(), hostname=hostname, monitor=monitor, address=address)
+            try:
+                db.session.add(new_wol)
+                db.session.commit()
+                return dashboard()
+            except IntegrityError as e:
+                error = f"*** MAC Address {mac} already exists ***"
+                return render_template("addwol.html", error=error)
+        else:
+            error = "*** Invalid MAC Address ***"
+            return render_template("addwol.html", error=error)
     
     return render_template("addwol.html")
 
