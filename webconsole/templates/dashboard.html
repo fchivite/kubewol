@@ -13,7 +13,7 @@
         {% for entry in dashboard_content %}
         <div class="col-md-4 my-4 bg-dark bg-gradient text-white">
             <p class="text-end"><a role="button" onclick="beforeDelete(event,'{{entry.hostname}}','{{entry.mac}}')"> <img title="Delete {{ entry.hostname }}" src="{{url_for('static', filename='delete.png')}}" style="max-height: 30px; max-width: 30px;"/></a></p>
-            <h2 class="my-3 {{'text-success' if entry.healthy else 'text-danger'}}">{{ entry.hostname }}<span class="h6">({{'Online' if entry.healthy else 'Offline'}})</span></h2>
+            <h2 class="my-3 {{'text-success' if entry.healthy else 'text-danger'}}">{{ entry.hostname }}<span class="h6"> ({{'Online' if entry.healthy else 'Offline'}})</span></h2>
             <p class="my-2">MAC Address: <span class="text-white-50">{{ entry.mac }}</span></p>
             <p class="my-2">Last WOL Sent:
                 <span class="text-white-50">
