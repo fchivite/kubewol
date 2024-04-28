@@ -4,7 +4,7 @@ from flask_apscheduler import APScheduler
 from os import path
 
 db = SQLAlchemy()
-DB_NAME = "wol_db.db"
+DB_NAME = "wol.db"
 
 def create_app():
     app = Flask(__name__)
