@@ -4,12 +4,18 @@
 
 
 <div class="container">
+    <div class="row">
+        <div class="col">
+            <a href="/add-wol" class="btn btn-primary my-2"> <img src="{{url_for('static', filename='addnew.png')}}" style="max-height: 30px; max-width: 30px;"/> Add New Monitor</a>
+        </div>
+      </div>
     <div class="row my-3">
         {% for entry in dashboard_content %}
         <div class="col-md-4 my-4 bg-dark bg-gradient text-white">
-            <h2 class="my-4 text-success">{{ entry.hostname }}</h2>
-            <p class="my-4">MAC Address: <span class="text-white-50">{{ entry.mac }}</span></p>
-            <p class="my-4">Last WOL Sent:
+            <p class="text-end"><a role="button" onclick="beforeDelete(event,'{{entry.hostname}}','{{entry.mac}}')"> <img title="Delete {{ entry.hostname }}" src="{{url_for('static', filename='delete.png')}}" style="max-height: 30px; max-width: 30px;"/></a></p>
+            <h2 class="my-3 {{'text-success' if entry.healthy else 'text-danger'}}">{{ entry.hostname }}<span class="h6">({{'Online' if entry.healthy else 'Offline'}})</span></h2>
+            <p class="my-2">MAC Address: <span class="text-white-50">{{ entry.mac }}</span></p>
+            <p class="my-2">Last WOL Sent:
                 <span class="text-white-50">
                     {% if entry.last_execution %}
                         {{ entry.last_execution.strftime("%d/%m/%Y %H:%M")}}
@@ -18,10 +24,26 @@
                     {% endif %}
                 </span>
             </p>
+            <p class="my-0 text-center text-danger bg-warning-subtle">Wake-On-LAN Events</p>
+            {% for wol in wols[:-6:-1] %}
+            <p class="my-0 bg-secondary">
+                {% if wol[1] == entry.hostname %}
+                    {{ wol[0 ]}}
+                {% endif %}
+            </p>
+            {% endfor %}
+            <p></p>
         </div>
         {% endfor %}
     </div>
 </div>
 
-
+<script>
+    function beforeDelete(event,hostname,mac) {
+        event.preventDefault();
+        window.confirm(hostname + ' entry will be deleted') ? 
+        window.location.href = '/delete?mac='+mac :
+        null;
+    }
+    </script>
 {% endblock %}

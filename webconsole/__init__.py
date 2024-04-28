@@ -20,8 +20,3 @@ def create_app():
 
     return app
 
-
-def create_database(app):
-    if not path.exists('webconsole/' + DB_NAME):
-        db.create_all(app=app)
-        print('WOL database created.')
